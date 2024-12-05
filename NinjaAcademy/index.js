@@ -24,8 +24,9 @@ class Sprite {
       width: 100,
       height: 50,
     };
-    this.color = color
-    this.isAttacking
+    this.color = color;
+    this.isAttacking;
+    this.health = 100;
   }
 
   draw() {
@@ -174,7 +175,8 @@ function animate() {
     && player.isAttacking
   ) {
     player.isAttacking = false;
-    console.log("hit")
+    enemy.health -= 20;
+    document.querySelector('#enemyHealth').style.width = enemy.health + '%';
   }
 
   if (
@@ -186,7 +188,8 @@ function animate() {
     && enemy.isAttacking
   ) {
     enemy.isAttacking = false;
-    console.log("hitem")
+    player.health -= 20;
+    document.querySelector('#playerHealth').style.width = player.health + '%';
   }
 
 }
@@ -223,7 +226,7 @@ window.addEventListener('keydown', (event) => {
       enemy.velocity.y = -20
       break;
     case 'ArrowDown':
-      enemy.attack();
+      enemy.attack()
       break;
   }
   console.log(event.key);
