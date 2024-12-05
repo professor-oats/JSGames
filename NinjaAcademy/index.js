@@ -135,6 +135,26 @@ function rectangularCollision({
   )
 }
 
+let timer = 5;
+
+function decreaseTimer() {
+  setTimeout(decreaseTimer, 1000);
+  if (timer > 0) {
+    timer--;
+    document.querySelector('#timer').innerHTML = timer;
+  }
+
+  // Who won the game?
+  if (timer === 0) {
+    if (player.health === enemy.health) {
+      document.querySelector('#displayResult').innerHTML = 'Tie';
+      document.querySelector('#displayResult').style.display = 'flex';
+    }
+  }
+}
+
+decreaseTimer();
+
 function animate() {
   // Loop over itself to continue to request animation frames
   window.requestAnimationFrame(animate);
