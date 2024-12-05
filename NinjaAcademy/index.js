@@ -33,7 +33,7 @@ class Sprite {
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
 
     // attackbox
-    //if (this.isAttacking) {
+    if (this.isAttacking) {
       ctx.fillStyle = 'green'
       ctx.fillRect(
         this.attackBox.position.x,
@@ -41,7 +41,7 @@ class Sprite {
         this.attackBox.width,
         this.attackBox.height
       )
-    //}
+    }
   }
 
   // Method responsible for what updates to do on animation frame
@@ -177,6 +177,18 @@ function animate() {
     console.log("hit")
   }
 
+  if (
+    rectangularCollision({
+        rectangle1: enemy,
+        rectangle2: player
+      }
+    )
+    && enemy.isAttacking
+  ) {
+    enemy.isAttacking = false;
+    console.log("hitem")
+  }
+
 }
 
 animate();
@@ -209,6 +221,9 @@ window.addEventListener('keydown', (event) => {
       break;
     case 'ArrowUp':
       enemy.velocity.y = -20
+      break;
+    case 'ArrowDown':
+      enemy.isAttacking = true;
       break;
   }
   console.log(event.key);
