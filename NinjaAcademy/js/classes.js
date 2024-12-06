@@ -65,7 +65,8 @@ class Fighter {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+    // This condition checks for how long the fighters will fall >= value
+    if (this.position.y + this.height + this.velocity.y >= canvas.height - 96) {
       this.velocity.y = 0;
     }
     else {
