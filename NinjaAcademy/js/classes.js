@@ -1,22 +1,52 @@
 class Sprite {
-  constructor({ position, imageSrc }) {
+  constructor({ position, imageSrc, scale = 1, framesMax = 1 }) {
     // We will use the imageSrc to render a sprite for the frames
     this.position = position;
     this.width = 50;
     this.height = 150;
     this.image = new Image()
     this.image.src = imageSrc;
+    this.scale = scale;
+    this.framesMax = framesMax;
+    this.framesCurrent = 0;
+    this.framesElapsed = 0;  // how many frames have elapsed over the run
+    this.framesHold = 5;  // how many frames to go through before update of animation
   };
 
   draw() {
-    // using position.x and position.y is posible since we pass
+    // using position.x and position.y is possible since we pass
     // position as an object with assign values for these
-    ctx.drawImage(this.image, this.position.x,  this.position.y);
+    // the drawImage function first takes 4 parameters for cropping
+    // later takes the 4 parameters for position and dimensions
+    // The superfirst parameter is the image itself to draw
+    ctx.drawImage(
+      this.image,
+       // crop location, crop width, crop height
+      // the position for crop will vary with the frames
+      this.framesCurrent * (this.image.width / this.framesMax),
+      0,
+      this.image.width / this.framesMax,  // divide by 6 since 6 frames in the image
+      this.image.height,
+
+      this.position.x,
+      this.position.y,
+      (this.image.width / this.framesMax) * this.scale,
+      this.image.height * this.scale,
+    );
   }
 
   // Method responsible for what updates to do on animation frame
   update() {
     this.draw()
+    this.framesElapsed++;
+
+    if (this.framesElapsed % this.framesHold === 0) {
+      if (this.framesCurrent < this.framesMax - 1) {
+        this.framesCurrent++
+      } else {
+        this.framesCurrent = 0;
+      }
+    }
   }
 }
 
