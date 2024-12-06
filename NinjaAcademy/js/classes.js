@@ -2,8 +2,8 @@ class Sprite {
   constructor({ position, imageSrc, scale = 1, offset = {x: 0, y:0}, framesMax = 1, framesCurrent = 0, framesElapsed = 0, framesHold = 5, }) {
     // We will use the imageSrc to render a sprite for the frames
     this.position = position;
-    this.width = 50;
-    this.height = 150;
+    this.width = 50;  // address these?
+    this.height = 150; // ??
     this.image = new Image()
     this.image.src = imageSrc;
     this.scale = scale;
@@ -67,6 +67,7 @@ class Fighter extends Sprite {
                 framesCurrent = 0,
                 framesElapsed = 0,
                 framesHold = 5,
+                sprites,
   }) {
     super({
       position,
@@ -94,6 +95,19 @@ class Fighter extends Sprite {
     this.color = color;
     this.isAttacking;
     this.health = 100;
+    this.sprites = sprites
+
+    // loop for checking over the different animation states
+    // decided in sprites as Idle, Run, etc.
+    for (const sprite in this.sprites) {
+      // sprite here will be the object key
+      // and we will push in .image attribute and declare a source for it
+      // this ensures that we will render the correct image depending on what sprite
+      // we have active
+      sprites[sprite].image = new Image();
+      sprites[sprite].image.src = sprites[sprite].imageSrc;
+    }
+    console.log(this.sprites);
   }
 
   // Method responsible for what updates to do on animation frame
