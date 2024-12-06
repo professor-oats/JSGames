@@ -1,5 +1,5 @@
 class Sprite {
-  constructor({ position, imageSrc, scale = 1, framesMax = 1 }) {
+  constructor({ position, imageSrc, scale = 1, offset = {x: 0, y:0}, framesMax = 1, framesCurrent = 0, framesElapsed = 0, framesHold = 5, }) {
     // We will use the imageSrc to render a sprite for the frames
     this.position = position;
     this.width = 50;
@@ -8,9 +8,10 @@ class Sprite {
     this.image.src = imageSrc;
     this.scale = scale;
     this.framesMax = framesMax;
-    this.framesCurrent = 0;
-    this.framesElapsed = 0;  // how many frames have elapsed over the run
-    this.framesHold = 5;  // how many frames to go through before update of animation
+    this.framesCurrent = framesCurrent;
+    this.framesElapsed = framesElapsed;  // how many frames have elapsed over the run
+    this.framesHold = framesHold;  // how many frames to go through before update of animation
+    this.offset = offset;
   };
 
   draw() {
@@ -28,16 +29,14 @@ class Sprite {
       this.image.width / this.framesMax,  // divide by 6 since 6 frames in the image
       this.image.height,
 
-      this.position.x,
-      this.position.y,
+      this.position.x - this.offset.x,
+      this.position.y - this.offset.y,
       (this.image.width / this.framesMax) * this.scale,
       this.image.height * this.scale,
     );
   }
 
-  // Method responsible for what updates to do on animation frame
-  update() {
-    this.draw()
+  animateFrames() {
     this.framesElapsed++;
 
     if (this.framesElapsed % this.framesHold === 0) {
@@ -48,11 +47,37 @@ class Sprite {
       }
     }
   }
+
+  // Method responsible for what updates to do on animation frame
+  update() {
+    this.draw()
+    this.animateFrames();
+  }
 }
 
-class Fighter {
-  constructor({ position, velocity, color = 'red', offset }) {
-    this.position = position;
+class Fighter extends Sprite {
+  constructor({
+                position,
+                velocity,
+                color = 'red',
+                offset,
+                imageSrc,
+                scale = 1,
+                framesMax = 1,
+                framesCurrent = 0,
+                framesElapsed = 0,
+                framesHold = 5,
+  }) {
+    super({
+      position,
+      imageSrc,
+      scale,
+      offset,
+      framesMax,
+      framesCurrent,
+      framesElapsed,
+      framesHold,
+    })
     this.velocity = velocity;
     this.width = 50;
     this.height = 150;
@@ -71,25 +96,10 @@ class Fighter {
     this.health = 100;
   }
 
-  draw() {
-    ctx.fillStyle = this.color
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-
-    // attackbox
-    if (this.isAttacking) {
-      ctx.fillStyle = 'green'
-      ctx.fillRect(
-        this.attackBox.position.x,
-        this.attackBox.position.y,
-        this.attackBox.width,
-        this.attackBox.height
-      )
-    }
-  }
-
   // Method responsible for what updates to do on animation frame
   update() {
     this.draw();
+    this.animateFrames();
     this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
     this.attackBox.position.y = this.position.y;
     this.position.x += this.velocity.x;
