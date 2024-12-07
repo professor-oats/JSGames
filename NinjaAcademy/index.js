@@ -172,6 +172,9 @@ function animate() {
   // it in the back - Render order in general
   background.update();
   shop.update();
+  // add optional alpha contrast here
+  // ctx.fillStyle = 'rgba(255, 255, 255, 0.15)'
+  // ctx.fillRect(0, 0, canvas.width, canvas.height)
   player.update();
   enemy.update();
 
